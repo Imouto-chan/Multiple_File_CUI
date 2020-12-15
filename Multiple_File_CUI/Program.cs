@@ -23,11 +23,18 @@ namespace Multiple_File_CUI
 
         private static void Main(string[] args)
         {
+            /* Arguments:
+             * args[0] - executable
+             * args[1] - input path
+             * args[2] - output path
+             * args[3] - subfolder option
+             * args[4..n] - arguments
+             */
             try
             {
                 if (args[0].ToLower().Equals("help"))
                 {
-                    Multiple_File_CUI.Help();
+                    Help();
                     return;
                 }
 
@@ -43,11 +50,11 @@ namespace Multiple_File_CUI
                         switch (args[i])
                         {
                             case "[i]":
-                                p.StartInfo.Arguments += " " + inputPath;
+                                p.StartInfo.Arguments += " " + inputPath; //Insert input path
                                 break;
                             case "[o]":
-                                p.StartInfo.Arguments += " " + inputPath.Replace(args[1], args[2]);
-                                Directory.CreateDirectory(inputPath.Replace(args[1], args[2]).Substring(0, inputPath.LastIndexOf('\\') + 1));
+                                p.StartInfo.Arguments += " " + inputPath.Replace(args[1], args[2]); //Insert output path
+                                Directory.CreateDirectory(inputPath.Replace(args[1], args[2]).Substring(0, inputPath.LastIndexOf('\\') + 1)); //Creates folder if it does not exist
                                 break;
                             default:
                                 p.StartInfo.Arguments += " " + args[i];
@@ -58,10 +65,10 @@ namespace Multiple_File_CUI
                     p.WaitForExit();
                 }
             }
-            catch (IndexOutOfRangeException)
+            catch (IndexOutOfRangeException) //Invalid amount of arguments given
             {
                 Console.WriteLine("Error - invalid arguments\n");
-                Multiple_File_CUI.Help();
+                Help();
             }
             catch (IOException e)
             {
