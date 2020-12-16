@@ -60,6 +60,12 @@ namespace Multiple_File_CUI
                 }
 
                 string[] inputFiles = (args[3].ToLower()[0] == 'y') ? Directory.GetFiles(args[1], "*.*", SearchOption.AllDirectories) : Directory.GetFiles(args[1], "*.*", SearchOption.TopDirectoryOnly);
+                args[1] = Path.GetFullPath(args[1]); //Setting both paths to absolute
+                args[2] = Path.GetFullPath(args[2]);
+                if (args[1][^1] != '\\')    //Making sure both paths ends with a \
+                    args[1] += '\\';
+                if (args[2][^1] != '\\')
+                    args[2] += '\\';
 
                 foreach (string inputPath in inputFiles)
                 {
@@ -84,14 +90,14 @@ namespace Multiple_File_CUI
                                 continue;
                         }
                     }
-
+                    string newPath = inputPath.Replace(args[1], args[2]);
                     System.Diagnostics.Process p = new System.Diagnostics.Process();
                     p.StartInfo.FileName = args[0];
                     p.StartInfo.UseShellExecute = false;
                     p.StartInfo.Arguments = arguments;
                     //Substituting input and output paths
-                    p.StartInfo.Arguments = p.StartInfo.Arguments.Replace("[i]", inputPath, StringComparison.OrdinalIgnoreCase).Replace("[o]", inputPath.Replace(args[1], args[2]), StringComparison.OrdinalIgnoreCase);
-                    Directory.CreateDirectory(inputPath.Replace(args[1], args[2]).Substring(0, inputPath.LastIndexOf('\\') + 1)); //Creates folder if it does not exist
+                    p.StartInfo.Arguments = p.StartInfo.Arguments.Replace("[i]", inputPath, StringComparison.OrdinalIgnoreCase).Replace("[o]", newPath, StringComparison.OrdinalIgnoreCase);
+                    Directory.CreateDirectory(newPath.Substring(0, newPath.LastIndexOf('\\') + 1)); //Creates folder if it does not exist
                     p.Start();
                     p.WaitForExit();
                 }
